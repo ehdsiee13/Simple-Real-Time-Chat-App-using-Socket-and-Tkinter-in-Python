@@ -99,3 +99,128 @@
     if __name__ == '__main__':
 
         main()
+
+# The second thing to create is the client and then imports the necessary modules such as socket for network communication, threading for handling multiple tasks concurrently, and tkinter for creating the GUI. scrolledtext and messagebox are specific components of tkinter used for displaying scrollable text and message dialogs, respectively.
+    import socket
+    import threading
+    import tkinter as tk
+    from tkinter import scrolledtext, messagebox
+
+# Next is to define the host IP address and port number.
+# The host is the standard loopback interface address (localhost)
+# The port is to listen on (non-privileged ports are > 1023)
+    HOST = '192.168.1.127'
+    PORT = 1234
+
+ # Create Constants for color codes, and font specifications for the GUI.
+    MEDIUM_GREY = '#1F1B24'
+    OCEAN_BLUE = '#00B2FF'
+    WHITE = "white"
+    FONT = ("Helvetica", 17)
+    BUTTON_FONT = ("Helvetica", 15)
+    SMALL_FONT = ("Helvetica", 13)
+
+# Then the Socket Initialization. A socket is created using the socket module for establishing a connection to the server.
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
+# Next is to create Event Handling Functions. 
+
+# add_message(message) - Appends a message to the scrolled text widget, enabling automatic scrolling to the bottom.    
+    def add_message(message):
+        message_box.config(state=tk.NORMAL)
+        message_box.insert(tk.END, message + '\n')
+        message_box.config(state=tk.DISABLED)
+        message_box.yview(tk.END)  # Auto-scroll to the bottom
+    
+# connect() - Attempts to connect to the server, sends the username to the server, and starts a thread to listen for messages from the server.
+    def connect():
+        try:
+            client.connect((HOST, PORT))
+            print("Successfully connected to the server")
+            add_message("[SERVER] Successfully connected to the server")
+        except Exception as e:
+            messagebox.showerror("Unable to connect to server", f"Unable to connect to server {HOST} {PORT}\nError: {e}")
+            return
+    
+        username = username_textbox.get()
+        if username != '':
+            client.sendall(username.encode())
+        else:
+            messagebox.showerror("Invalid username", "Username cannot be empty")
+            return
+    
+        threading.Thread(target=listen_for_messages_from_server, args=(client,)).start()
+    
+        username_textbox.config(state=tk.DISABLED)
+        username_button.config(state=tk.DISABLED)
+    
+# send_message() - Sends the entered message to the server.  
+    def send_message():
+        message = message_textbox.get()
+        if message != '':
+            client.sendall(message.encode())
+            message_textbox.delete(0, tk.END)
+        else:
+            messagebox.showerror("Empty Message", "Message cannot be empty")
+            
+# setup the GUI of the app. 
+    # Design
+    root = tk.Tk()
+    root.geometry("600x600")
+    root.title("Simple Real-Time Chat-App")
+    root.resizable(False, False)
+    
+    root.grid_rowconfigure(0, weight=1)
+    root.grid_rowconfigure(1, weight=4)
+    root.grid_rowconfigure(2, weight=1)
+    
+    top_frame = tk.Frame(root, width=600, height=100, bg=MEDIUM_GREY)
+    top_frame.grid(row=0, column=0, sticky=tk.NSEW)
+    
+    middle_frame = tk.Frame(root, width=600, height=400, bg=MEDIUM_GREY)
+    middle_frame.grid(row=1, column=0, sticky=tk.NSEW)
+    
+    bottom_frame = tk.Frame(root, width=600, height=100, bg=MEDIUM_GREY)
+    bottom_frame.grid(row=2, column=0, sticky=tk.NSEW)
+    
+# Next is the username label, textbox, button and message box and textbox for the app.
+    username_label = tk.Label(top_frame, text="Enter username:", font=FONT, bg=MEDIUM_GREY, fg=WHITE)
+    username_label.pack(side=tk.LEFT, padx=10)
+    
+    username_textbox = tk.Entry(top_frame, font=FONT, bg=MEDIUM_GREY, fg=WHITE, width=23)
+    username_textbox.pack(side=tk.LEFT)
+    
+    username_button = tk.Button(top_frame, text=" Join ", font=BUTTON_FONT, bg=OCEAN_BLUE, fg=WHITE, command=connect)
+    username_button.pack(side=tk.LEFT, padx=25)
+    
+    message_textbox = tk.Entry(bottom_frame, font=FONT, bg=MEDIUM_GREY, fg=WHITE, width=38)
+    message_textbox.pack(side=tk.LEFT, padx=5)
+    
+    message_button = tk.Button(bottom_frame, text="Send", font=BUTTON_FONT, bg=OCEAN_BLUE, fg=WHITE, command=send_message)
+    message_button.pack(side=tk.LEFT, padx=15)
+    
+    message_box = scrolledtext.ScrolledText(middle_frame, font=SMALL_FONT, bg=MEDIUM_GREY, fg=WHITE, width=67, height=26.5)
+    message_box.config(state=tk.DISABLED)
+    message_box.pack(side=tk.TOP)
+
+# listen_for_messages_from_server(client) - Listens for incoming messages from the server in a separate thread.
+    def listen_for_messages_from_server(client):
+        while True:
+            try:
+                message = client.recv(2048).decode('utf-8')
+                if message != '':
+                    # Splitting the message
+                    username, content = message.split("-", 1)
+                    add_message(f"[{username}] {content}")
+                else:
+                    messagebox.showerror("Error", "Message received from the server is empty")
+            except Exception as e:
+                print(f"Error receiving message: {e}")
+                break
+
+# Lastly the Main Loop.  The main function starts the tkinter main loop, and the main block ensures that the main function is called when the script is run.
+    def main():
+        root.mainloop()
+    
+    if __name__ == '__main__':
+        main()
