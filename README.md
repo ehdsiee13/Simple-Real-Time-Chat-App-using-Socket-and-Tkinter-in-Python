@@ -56,6 +56,7 @@ def send_messages_to_all(from_username, message):
 # Then client_handler Function. This function handles the initial connection from a client. It receives the client's username, adds the client to the active_clients list, sends a prompt message to all clients about the new connection, and then starts a new thread to listen for messages from this client.
 # Function to handle a client
 
+
 def client_handler(client):
     while True:
         try:
