@@ -224,3 +224,8 @@
     
     if __name__ == '__main__':
         main()
+
+        
+# Thank you for visiting my blog! 
+
+# I hope you learned something.
