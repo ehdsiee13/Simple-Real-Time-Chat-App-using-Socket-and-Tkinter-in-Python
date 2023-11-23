@@ -74,7 +74,6 @@ while True:
 
 
 def main():
-
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     try:
