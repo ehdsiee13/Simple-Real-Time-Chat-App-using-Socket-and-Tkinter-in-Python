@@ -78,7 +78,6 @@ while True:
 
 def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
     try:
         server.bind((HOST, PORT))
         print(f"Running the server on {HOST} {PORT}")
