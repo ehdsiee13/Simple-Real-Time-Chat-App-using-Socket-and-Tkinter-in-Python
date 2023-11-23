@@ -93,5 +93,7 @@ def main():
 
 # Then lastly the if name == '__main__': Block. This block ensures that the main function is called only if the script is executed directly
 
+
 if __name__ == '__main__':
+
     main()
