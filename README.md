@@ -71,29 +71,28 @@ while True:
 
 # After that is the main Function. The main function initializes the server socket, binds it to the specified host and port, and starts listening for incoming connections. When a connection is accepted, it prints a success message and starts a new thread to handle that client.
 
-
-
     def main():
 
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
-    try:
-        server.bind((HOST, PORT))
-        print(f"Running the server on {HOST} {PORT}")
-    except Exception as e:
-        print(f"Unable to bind to host {HOST} and port {PORT}\nError: {e}")
+        try:
+            server.bind((HOST, PORT))
+            print(f"Running the server on {HOST} {PORT}")
+        except Exception as e:
+            print(f"Unable to bind to host {HOST} and port {PORT}\nError: {e}")
         return
 
-    server.listen(LISTENER_LIMIT)
+        server.listen(LISTENER_LIMIT)
 
-    while True:
-        client, address = server.accept()
-        print(f"Succesfully connected to client {address[0]} {address[1]}")
+        while True:
+            client, address = server.accept()
+            print(f"Succesfully connected to client {address[0]} {address[1]}")
+            
         threading.Thread(target=client_handler, args=(client,)).start()
 
+        
 # Then lastly the if name == '__main__': Block. This block ensures that the main function is called only if the script is executed directly
 
+    if __name__ == '__main__':
 
-if __name__ == '__main__':
-
-    main()
+        main()
