@@ -72,6 +72,7 @@ while True:
 # After that is the main Function. The main function initializes the server socket, binds it to the specified host and port, and starts listening for incoming connections. When a connection is accepted, it prints a success message and starts a new thread to handle that client.
 
 
+
 def main():
 
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
