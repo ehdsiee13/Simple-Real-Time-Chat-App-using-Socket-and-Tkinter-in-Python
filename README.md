@@ -58,7 +58,7 @@ def send_messages_to_all(from_username, message):
 
 
 def client_handler(client):
-    while True:
+while True:
         try:
             username = client.recv(2048).decode('utf-8')
             if username != '':
