@@ -73,7 +73,8 @@ while True:
 
 
 
-def main():
+    def main():
+
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     try:
