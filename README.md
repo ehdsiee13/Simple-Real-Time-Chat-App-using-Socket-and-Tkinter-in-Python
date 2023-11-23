@@ -39,16 +39,19 @@
                 print(f"Error receiving message: {e}")
                 break
 
+
 # Next is send_message_to_clients Function. This function sends a message to the clients by encoding the message and using sendall to ensure that the entire message is sent.
 
-def send_message_to_clients(client, message):
-    client.sendall(message.encode())
+    def send_message_to_clients(client, message):
+        client.sendall(message.encode())
+
 
 # Also added send_messages_to_all Function. This function sends a message to all connected clients except the sender. It iterates over active_clients and uses the send_message_to_clients function to send the message to each client.
 
-def send_messages_to_all(from_username, message):
-    for user in active_clients:
-        send_message_to_clients(user[1], message)
+    def send_messages_to_all(from_username, message):
+        for user in active_clients:
+            send_message_to_clients(user[1], message)
+
 
 # Then client_handler Function. This function handles the initial connection from a client. It receives the client's username, adds the client to the active_clients list, sends a prompt message to all clients about the new connection, and then starts a new thread to listen for messages from this client.
 # Function to handle a client
@@ -70,6 +73,7 @@ def send_messages_to_all(from_username, message):
                 break'
                 
         threading.Thread(target=listen_for_messages, args=(client, username,)).start()
+
 
 # After that is the main Function. The main function initializes the server socket, binds it to the specified host and port, and starts listening for incoming connections. When a connection is accepted, it prints a success message and starts a new thread to handle that client.
 
